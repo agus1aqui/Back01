@@ -47,7 +47,7 @@ class CartManager {
             const carts = await this.getCarts();
             return carts.find(cart => cart.id === id);
         } catch (error) {
-            console.error("Error al buscar el carrito con ID:", error);
+            console.error("Error searching for product with ID:", error);
             return null;
         }
     }
@@ -56,7 +56,7 @@ class CartManager {
         try {
             const cart = await this.getCartById(cartId);
             if (!cart) {
-                return "Carrito no encontrado";
+                return "Cart not found";
             }
 
             const productIndex = cart.products.findIndex(product => product.productId === productId);
@@ -67,10 +67,10 @@ class CartManager {
             }
 
             await this.saveCarts();
-            return "Producto agregado al carrito";
+            return "Product added to the cart";
         } catch (error) {
-            console.error("Error al agregar producto al carrito:", error);
-            return "Error al agregar producto al carrito";
+            console.error("Error adding product to the cart", error);
+            return "Error adding product to the cart";
         }
     }
 

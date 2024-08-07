@@ -1,0 +1,52 @@
+[
+    {
+        "id": 1,
+        "name": "Producto A",
+        "price": 10,
+        "description": "Un excelente producto A que cumple con todas las expectativas.",
+        "code": "A1234",
+        "stock": 1,
+        "category": "Electrónica",
+        "status": true
+    },
+    {
+        "id": 2,
+        "name": "Producto B",
+        "price": 20,
+        "description": "El producto B es conocido por su durabilidad y calidad.",
+        "code": "B5678",
+        "stock": 1,
+        "category": "Hogar",
+        "status": true
+    },
+    {
+        "id": 3,
+        "name": "Producto C",
+        "price": 30,
+        "description": "Producto C de alto rendimiento y excelente funcionalidad.",
+        "code": "C9101",
+        "stock": 1,
+        "category": "Deportes",
+        "status": true
+    },
+    {
+        "id": 4,
+        "name": "Producto D",
+        "price": 40,
+        "description": "Un innovador producto D diseñado para la eficiencia.",
+        "code": "D1121",
+        "stock": 1,
+        "category": "Juguetes",
+        "status": true
+    },
+    {
+        "id": 5,
+        "name": "Producto E",
+        "price": 50,
+        "description": "Producto E de calidad premium, ideal para uso diario.",
+        "code": "E3141",
+        "stock": 1,
+        "category": "Moda",
+        "status": true
+    }
+]
