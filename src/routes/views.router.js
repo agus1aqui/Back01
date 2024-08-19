@@ -10,7 +10,9 @@ router.get("/", (req, res) => {
 router.get("/products", (req, res) => {
     res.render("products");
 });
-
+router.get(/realtimeproducts/, (req, res) => {
+    res.render("realtimeproducts", { products });
+})
 
 
 

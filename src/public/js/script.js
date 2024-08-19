@@ -1,55 +1,33 @@
-console.log(`funcionando...`)
-const chatBox = document.getElementById("chatBox");
 const socket = io();
+const productList = document.getElementById('productList');
+const productForm = document.getElementById('productForm');
+const nameInput = document.getElementById('name');
+const priceInput = document.getElementById('price');
 
-socket.emit("message", "hola mundo")
-socket.on("evento", data => {
-    console.log(data)
-})
+socket.on('updateProducts', (products) => {
+    productList.innerHTML = '';
+    products.forEach(product => {
+        const productElement = document.createElement('li');
+        productElement.id = `product-${product.id}`;
+        productElement.innerHTML = `
+            ${product.name} - $${product.price}
+            <button onclick="deleteProduct(${product.id})">Eliminar</button>
+        `;
+        productList.appendChild(productElement);
+    });
+});
+productForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const newProduct = {
+        id: Date.now(),
+        name: nameInput.value,
+        price: parseFloat(priceInput.value)
+    };
+    socket.emit('newProduct', newProduct);
+    nameInput.value = '';
+    priceInput.value = '';
+});
 
-/*socket.on('users', (arrayUsers) => {
-    const usersList = document.getElementById('usersList');
-
-    usersList.array.forEach(users => {
-        usersList.innerHTML += `<li>${users.name} ${users.lastname}</li>`;
-    })
-})
-    */
-
-
-let user
-
-Swal.fire({
-    title: "hola mundo",
-    input: "text",
-    text: "ingrese su nombre",
-    inputValidator: (value) => {
-        return !value && "necesitas escribir algo"
-    },
-    allowOutsideClick: false,
-    allowEscapeKey: false
-}).then(result => {
-    user = result.value
-    socket.emit('user', user)
-})
-
-chatBox.addEventListener("keyup", (e) => {
-    if (e.key === "Enter") {
-        if (chatBox.value.trim().length > 0) {
-            socket.emit("message", { user: user, message: chatBox.value })
-            chatBox.value = ""
-        }
-    }
-})
-
-
-//render 
-socket.on("messageLogs", data => {
-    const log = document.getElementById("messageLogs")
-    let messages = ""
-
-    data.forEach(message => {
-        messages = messages + `${message.user} : ${message.message}`;
-    })
-    log.innerHTML = messages;
-})
+function deleteProduct(productId) {
+    socket.emit('deleteProduct', productId);
+}

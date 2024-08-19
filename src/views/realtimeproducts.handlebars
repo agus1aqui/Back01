@@ -1,0 +1,18 @@
+<ul id="productList">
+    {{#each products}}
+    <li id="product-{{id}}">
+        {{name}} - ${{price}}
+        <button onclick="deleteProduct({{id}})">Eliminar</button>
+    </li>
+    {{/each}}
+</ul>
+
+<form id="productForm">
+    <input type="text" id="name" placeholder="Nombre del producto" required>
+    <input type="number" id="price" placeholder="Precio del producto" required>
+    <button type="submit">Agregar Producto</button>
+</form>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/script.js"></script>
