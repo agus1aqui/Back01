@@ -65,6 +65,7 @@ router.put("/:id", async (req, res) => {
     const { name, price } = req.body;
     const products = await readProductsFromFile();
     const indice = products.findIndex((product) => product.id === id);
+
     if (indice !== -1) {
         products[indice].name = name;
         products[indice].price = price;
@@ -74,7 +75,6 @@ router.put("/:id", async (req, res) => {
         res.status(404).json({ error: "Product not found" });
     }
 });
-
 // Ruta delete
 router.delete("/:pid", async (req, res) => {
     const pid = Number(req.params.pid);

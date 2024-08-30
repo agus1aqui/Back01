@@ -18,5 +18,16 @@
     "stock": 1,
     "category": "Moda",
     "status": true
+  },
+  {
+    "id": 1724441949242,
+    "name": "teclado",
+    "price": 200
+  },
+  {
+    "id": 1724442436401,
+    "name": "pizza",
+    "price": 50,
+    "imageUrl": "https://cdn.britannica.com/08/177308-050-94D9D6BE/Food-Pizza-Basil-Tomato.jpg"
   }
 ]

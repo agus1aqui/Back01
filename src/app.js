@@ -1,55 +1,68 @@
-const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
-const exphbs = require('express-handlebars');
-const path = require('path');
+import express from 'express';
+import { Server } from 'socket.io';
+import http from 'http';
+import path from 'path';
+import fs from 'fs';
+import handlebars from 'express-handlebars';
+import { fileURLToPath } from 'url';
+//import mongoose from 'mongoose';
+//import ProductsModel from './models/products.model.js';
 
-const viewsRouter = require('./routes/views.router');
-const ProductManager = require("./managers/productManager.js");
-const manager = new ProductManager("./src/data/products.json");
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 8080;
-const httpServer = http.createServer(app);
-const io = new Server(httpServer);
+const server = http.createServer(app);
+const io = new Server(server);
 
-//Middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
-
-
-app.engine('handlebars', exphbs.engine());
+app.engine('handlebars', handlebars.engine());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
-//Routers
-app.use('/', viewsRouter);
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+const productsFilePath = path.join(__dirname, 'data', 'products.json');
 
-httpServer.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+const readProductsFromFile = () => {
+    const data = fs.readFileSync(productsFilePath, 'utf-8');
+    return JSON.parse(data);
+};
+
+const writeProductsToFile = (products) => {
+    fs.writeFileSync(productsFilePath, JSON.stringify(products, null, 2));
+};
+
+app.get('/realtimeproducts', (req, res) => {
+    const products = readProductsFromFile();
+    res.render('realTimeProducts', { products });
 });
-
 
 io.on('connection', (socket) => {
     console.log('Usuario conectado');
 
-   
-    socket.on('newProduct', async (product) => {
-        await manager.addProduct(product); 
-        const updatedProducts = await manager.getProducts(); 
-        io.emit('updateProducts', updatedProducts); 
+    socket.on('newProduct', (product) => {
+        const products = readProductsFromFile();
+        products.push(product);
+        writeProductsToFile(products);
+        io.emit('updateProducts', products);
     });
 
- 
-    socket.on('deleteProduct', async (productId) => {
-        await manager.deleteProduct(productId); 
-        const updatedProducts = await manager.getProducts();
-        io.emit('updateProducts', updatedProducts);
+    socket.on('deleteProduct', (productId) => {
+        let products = readProductsFromFile();
+        products = products.filter(p => p.id !== productId);
+        writeProductsToFile(products);
+        io.emit('updateProducts', products);
     });
 
     socket.on('disconnect', () => {
         console.log('Usuario desconectado');
     });
+});
+
+const PORT = 8080;
+server.listen(PORT, () => {
+    console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });
